@@ -1,0 +1,9 @@
+{
+	"name": "vamsi39DF",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "bc9f2936-4298-4b3d-8f6f-8bebcefcf002",
+		"tenantId": "559d04c1-7115-49b0-828d-64773839e394"
+	}
+}
