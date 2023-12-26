@@ -458,6 +458,89 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_pivot')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSql_1",
+								"type": "DatasetReference"
+							},
+							"name": "emp"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase_1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "saljobpivoting"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pivot1"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPNO as decimal(4,0),",
+						"          ENAME as string,",
+						"          JOB as string,",
+						"          MGR as decimal(4,0),",
+						"          HIREDATE as timestamp,",
+						"          SAL as decimal(7,2),",
+						"          COMM as decimal(7,2),",
+						"          DEPTNO as decimal(2,0),",
+						"          logDate as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> emp",
+						"select1 pivot(groupBy(DEPTNO),",
+						"     pivotBy(JOB),",
+						"     {} = max(SAL),",
+						"     columnNaming: '$N$V',",
+						"     lateral: false) ~> pivot1",
+						"emp select(mapColumn(",
+						"          JOB,",
+						"          SAL,",
+						"          DEPTNO",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"pivot1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'salJobPivot',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     recreate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> saljobpivoting"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSql_1')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_window_ranking')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -623,6 +706,7 @@
 				"activities": [
 					{
 						"name": "Data flow1",
+						"description": "https://us04web.zoom.us/j/79261929345?pwd=tYBagCiYZ8l0aDAlIc5oqKfX4Asrbp.1#success",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -635,13 +719,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "df_window_ranking",
+								"referenceName": "df_pivot",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"emp": {},
-									"dept": {},
-									"sink1": {}
+									"saljobpivoting": {}
 								}
 							},
 							"staging": {},
@@ -662,7 +745,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_window_ranking')]"
+				"[concat(variables('factoryId'), '/dataflows/df_pivot')]"
 			]
 		}
 	]
