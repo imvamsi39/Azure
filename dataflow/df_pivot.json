@@ -1,5 +1,5 @@
 {
-	"name": "df_2",
+	"name": "df_pivot",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

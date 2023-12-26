@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_window_ranking",
+						"referenceName": "df_pivot",
 						"type": "DataFlowReference"
 					},
 					"compute": {
