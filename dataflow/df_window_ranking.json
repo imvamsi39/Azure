@@ -1,5 +1,5 @@
 {
-	"name": "df_prac",
+	"name": "df_window_ranking",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -66,7 +66,7 @@
 				"     validateSchema: false,",
 				"     format: 'table',",
 				"     store: 'sqlserver',",
-				"     schemaName: 'df',",
+				"     schemaName: 'dbo',",
 				"     tableName: 'salRank',",
 				"     insertable: true,",
 				"     updateable: false,",
