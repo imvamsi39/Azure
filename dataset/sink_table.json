@@ -1,5 +1,5 @@
 {
-	"name": "AzureSql_1",
+	"name": "sink_table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase_1",
@@ -54,9 +54,7 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "dbo",
-			"table": "EMP"
+			"table": "empSink"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
