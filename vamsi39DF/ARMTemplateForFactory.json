@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "vamsi39DF"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
 		"AzureFunction1_functionKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
@@ -19,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'MySql_SH'"
 		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://vamsi39storage.dfs.core.windows.net/"
+		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"type": "string",
 			"defaultValue": "https://vamsi39-funcapp.azurewebsites.net"
@@ -28,6 +36,510 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_Tables_to_json')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_oqh",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.cw_items",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_oqh",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "dbo.@{item().source.table}"
+										},
+										{
+											"name": "Destination",
+											"value": "myfiles//@{item().destination.fileName}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"validateDataConsistency": false,
+										"translator": {
+											"value": "@item().copyActivity.translator",
+											"type": "Expression"
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SourceDataset_oqh",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_table": "@item().source.table"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DestinationDataset_oqh",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_fileName": "@item().destination.fileName"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"cw_items": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"source": {
+									"table": "BONUS"
+								},
+								"destination": {
+									"fileName": "dbo.BONUS.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "ENAME",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['ENAME']"
+												}
+											},
+											{
+												"source": {
+													"name": "JOB",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['JOB']"
+												}
+											},
+											{
+												"source": {
+													"name": "SAL",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['SAL']"
+												}
+											},
+											{
+												"source": {
+													"name": "COMM",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['COMM']"
+												}
+											}
+										]
+									}
+								}
+							},
+							{
+								"source": {
+									"table": "DEPT"
+								},
+								"destination": {
+									"fileName": "dbo.DEPT.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "DEPTNO",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['DEPTNO']"
+												}
+											},
+											{
+												"source": {
+													"name": "DNAME",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['DNAME']"
+												}
+											},
+											{
+												"source": {
+													"name": "LOC",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['LOC']"
+												}
+											}
+										]
+									}
+								}
+							},
+							{
+								"source": {
+									"table": "EMP"
+								},
+								"destination": {
+									"fileName": "dbo.EMP.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "EMPNO",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['EMPNO']"
+												}
+											},
+											{
+												"source": {
+													"name": "ENAME",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['ENAME']"
+												}
+											},
+											{
+												"source": {
+													"name": "JOB",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['JOB']"
+												}
+											},
+											{
+												"source": {
+													"name": "MGR",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['MGR']"
+												}
+											},
+											{
+												"source": {
+													"name": "HIREDATE",
+													"type": "DateTime"
+												},
+												"sink": {
+													"path": "$['HIREDATE']"
+												}
+											},
+											{
+												"source": {
+													"name": "SAL",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['SAL']"
+												}
+											},
+											{
+												"source": {
+													"name": "COMM",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['COMM']"
+												}
+											},
+											{
+												"source": {
+													"name": "DEPTNO",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['DEPTNO']"
+												}
+											},
+											{
+												"source": {
+													"name": "logDate",
+													"type": "Date"
+												},
+												"sink": {
+													"path": "$['logDate']"
+												}
+											}
+										]
+									}
+								}
+							},
+							{
+								"source": {
+									"table": "personale"
+								},
+								"destination": {
+									"fileName": "dbo.personale.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "id",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['id']"
+												}
+											},
+											{
+												"source": {
+													"name": "name",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['name']"
+												}
+											},
+											{
+												"source": {
+													"name": "age",
+													"type": "Int32"
+												},
+												"sink": {
+													"path": "$['age']"
+												}
+											},
+											{
+												"source": {
+													"name": "DoB",
+													"type": "DateTime"
+												},
+												"sink": {
+													"path": "$['DoB']"
+												}
+											},
+											{
+												"source": {
+													"name": "address",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['address']"
+												}
+											},
+											{
+												"source": {
+													"name": "city",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['city']"
+												}
+											},
+											{
+												"source": {
+													"name": "country",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['country']"
+												}
+											},
+											{
+												"source": {
+													"name": "email",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['email']"
+												}
+											},
+											{
+												"source": {
+													"name": "mobile",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['mobile']"
+												}
+											}
+										]
+									}
+								}
+							},
+							{
+								"source": {
+									"table": "profession"
+								},
+								"destination": {
+									"fileName": "dbo.profession.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "personale_id",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['personale_id']"
+												}
+											},
+											{
+												"source": {
+													"name": "name",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['name']"
+												}
+											},
+											{
+												"source": {
+													"name": "company",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['company']"
+												}
+											},
+											{
+												"source": {
+													"name": "role",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['role']"
+												}
+											},
+											{
+												"source": {
+													"name": "salary",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['salary']"
+												}
+											},
+											{
+												"source": {
+													"name": "location",
+													"type": "String"
+												},
+												"sink": {
+													"path": "$['location']"
+												}
+											},
+											{
+												"source": {
+													"name": "joinDate",
+													"type": "DateTime"
+												},
+												"sink": {
+													"path": "$['joinDate']"
+												}
+											}
+										]
+									}
+								}
+							},
+							{
+								"source": {
+									"table": "SALGRADE"
+								},
+								"destination": {
+									"fileName": "dbo.SALGRADE.txt"
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "GRADE",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['GRADE']"
+												}
+											},
+											{
+												"source": {
+													"name": "LOSAL",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['LOSAL']"
+												}
+											},
+											{
+												"source": {
+													"name": "HISAL",
+													"type": "Decimal"
+												},
+												"sink": {
+													"path": "$['HISAL']"
+												}
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_oqh')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_oqh')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/copy_onPremise')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -432,6 +944,38 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_oqh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_fileName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().cw_fileName",
+							"type": "Expression"
+						},
+						"fileSystem": "myfiles"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MySqlTable_onPremise')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -449,6 +993,35 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/MySql_SH')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_oqh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_table": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().cw_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_1')]"
 			]
 		},
 		{
@@ -515,6 +1088,23 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_1')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureFunction1')]",

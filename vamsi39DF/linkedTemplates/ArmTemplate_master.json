@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "vamsi39DF"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
 		"AzureFunction1_functionKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
@@ -18,6 +22,10 @@
 		"MySql_SH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'MySql_SH'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://vamsi39storage.dfs.core.windows.net/"
 		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"type": "string",
@@ -50,6 +58,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
 					"AzureFunction1_functionKey": {
 						"value": "[parameters('AzureFunction1_functionKey')]"
 					},
@@ -58,6 +69,9 @@
 					},
 					"MySql_SH_connectionString": {
 						"value": "[parameters('MySql_SH_connectionString')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					},
 					"AzureFunction1_properties_typeProperties_functionAppUrl": {
 						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"

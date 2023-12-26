@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "vamsi39DF"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"AzureFunction1_functionKey": {
 			"value": ""
 		},
@@ -13,6 +16,9 @@
 		},
 		"MySql_SH_connectionString": {
 			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://vamsi39storage.dfs.core.windows.net/"
 		},
 		"AzureFunction1_properties_typeProperties_functionAppUrl": {
 			"value": "https://vamsi39-funcapp.azurewebsites.net"
