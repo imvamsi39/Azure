@@ -361,7 +361,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/trg_schedule')]",
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -381,8 +381,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 1,
-						"startTime": "2024-01-04T05:17:00",
-						"endTime": "2024-01-04T05:21:00",
+						"startTime": "2024-01-04T05:22:00",
 						"timeZone": "India Standard Time"
 					}
 				}
