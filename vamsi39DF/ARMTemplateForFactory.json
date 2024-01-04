@@ -1391,6 +1391,38 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/pl_triggers')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger_tw')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "pl_triggers",
+						"type": "PipelineReference"
+					},
+					"parameters": {}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2024-01-04T08:16:00Z",
+					"endTime": "2024-01-04T08:25:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_triggers')]"
+			]
 		}
 	]
 }
